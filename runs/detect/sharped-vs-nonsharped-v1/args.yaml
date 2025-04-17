@@ -13,7 +13,7 @@ cache: false
 device: 0
 workers: 2
 project: null
-name: sharped-vs-nonsharped-v1
+name: sharped-vs-nonsharped-v13
 exist_ok: false
 pretrained: true
 optimizer: auto
@@ -103,4 +103,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
-save_dir: runs\detect\sharped-vs-nonsharped-v1
+save_dir: runs\detect\sharped-vs-nonsharped-v13
