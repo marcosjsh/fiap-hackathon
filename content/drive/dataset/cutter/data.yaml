@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['cutter', 'cutter - v1 2024-01-02 7-30pm', 'cutter - v2 2024-01-02 8-02pm']
+
+roboflow:
+  workspace: nosily
+  project: cuter-nxrcp
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/nosily/cuter-nxrcp/dataset/1

@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Gunting']
+
+roboflow:
+  workspace: guardian-eye
+  project: gunting-qegkw
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/guardian-eye/gunting-qegkw/dataset/1

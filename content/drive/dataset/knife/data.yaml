@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 4
+names: ['Knife', 'Person', 'Punch', 'Weapon Holding']
+
+roboflow:
+  workspace: testing-y9g4b
+  project: knife-dataset-3g9ed
+  version: 4
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/testing-y9g4b/knife-dataset-3g9ed/dataset/4

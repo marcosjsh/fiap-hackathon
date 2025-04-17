@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Stapler']
+
+roboflow:
+  workspace: practicas-nlzno
+  project: stapler-5buop
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/practicas-nlzno/stapler-5buop/dataset/1

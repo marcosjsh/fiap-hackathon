@@ -89,6 +89,36 @@ Realizou-se uma **pesquisa ativa por conjuntos de dados públicos no Roboflow**,
 ```
 
 Cada classe foi buscada individualmente, selecionando projetos com imagens reais, bounding boxes precisos e variações visuais significativas. Os datasets foram então baixados e organizados em pastas separadas por classe.
+A contagem original de arquivos é a seguinte:
+
+##### 📂 Train
+| Categoria    | Imagens |
+|--------------|---------|
+| knife        | 1677    |
+| scissor      | 2100    |
+| cutter       | 862     |
+| boot         | 50      |
+| stapler      | 50      |
+
+##### 📂 Valid
+| Categoria    | Imagens |
+|--------------|---------|
+| knife        | 162     |
+| scissor      | 199     |
+| cutter       | 117     |
+| boot         | 0       |
+| stapler      | 0       |
+
+##### 📂 Test
+| Categoria    | Imagens |
+|--------------|---------|
+| knife        | 72      |
+| scissor      | 100     |
+| cutter       | 31      |
+| boot         | 17      |
+| stapler      | 0       |
+
+obs: adicionamos algumas imagens de `boot` e `stapler` com o intuito de sujar o dataset
 
 ---
 
@@ -96,7 +126,7 @@ Cada classe foi buscada individualmente, selecionando projetos com imagens reais
 
 Como os datasets coletados possuíam diferentes **estruturas e índices de classes**, tornou-se necessário unificá-los.
 
-Para isso, foi utilizado o script `unificar-dataset-e-atualizar-indice.py`, presente na pasta `tools`, que:
+Para isso, foi utilizado o script `unificar-dataset-e-atualizar-indice-e-subsampling.py`, presente na pasta `tools`, que:
 
 - 🗃️ Agrupa todos os arquivos em uma estrutura comum (`test/images`, `train/images`, `valid/images`)
 - 🔄 Atualiza os arquivos de rótulo `.txt` para refletirem os **índices padronizados**

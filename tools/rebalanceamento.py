@@ -11,7 +11,7 @@ CLASSES_A_REBALANCEAR = {
 }
 
 # Diretórios base
-BASE_PATH = Path("/content/drive")
+BASE_PATH = Path("../../content/drive")
 LABELS_TRAIN = BASE_PATH / "train" / "labels"
 IMAGES_TRAIN = BASE_PATH / "train" / "images"
 
