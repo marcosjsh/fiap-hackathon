@@ -85,7 +85,7 @@ A ferramenta [Roboflow](https://roboflow.com/) foi escolhida por vários motivos
 Realizou-se uma **pesquisa ativa por conjuntos de dados públicos no Roboflow**, com foco nas seguintes classes:
 
 ```python
-["knife", "scissor", "scalpel", "axe", "saw", "chainsaw", "chisel", "sickle"]
+["knife", "scissor", "cutter"]
 ```
 
 Cada classe foi buscada individualmente, selecionando projetos com imagens reais, bounding boxes precisos e variações visuais significativas. Os datasets foram então baixados e organizados em pastas separadas por classe.
@@ -96,7 +96,7 @@ Cada classe foi buscada individualmente, selecionando projetos com imagens reais
 
 Como os datasets coletados possuíam diferentes **estruturas e índices de classes**, tornou-se necessário unificá-los.
 
-Para isso, foi utilizado o script `unificar-dataset-e-atualizar-indice.py`, presente na pasta `scripts-utilitarios`, que:
+Para isso, foi utilizado o script `unificar-dataset-e-atualizar-indice.py`, presente na pasta `tools`, que:
 
 - 🗃️ Agrupa todos os arquivos em uma estrutura comum (`test/images`, `train/images`, `valid/images`)
 - 🔄 Atualiza os arquivos de rótulo `.txt` para refletirem os **índices padronizados**
@@ -107,11 +107,11 @@ Essa etapa garante que os dados estejam **prontos para o treinamento em YOLOv5**
 
 ### ✂️ 3. Subsampling durante a unificação
 
-Durante o processo de unificação, foi aplicado um **subsampling** para limitar a quantidade de exemplos das categorias knife e axe:
+Durante o processo de unificação, foi aplicado um **subsampling** para limitar a quantidade de exemplos das categorias knife e scissor:
 
 - 🔁 **Máximo de 1.000 imagens para as categorias alvo**
 - 🎯 Isso evita sobrecarregar a memória e acelera o processo de treinamento
-- ⚖️ Ajuda a **balancear o dataset**, evitando que uma classe como `"knife"` e `"axe"` domine o aprendizado
+- ⚖️ Ajuda a **balancear o dataset**, evitando que uma classe como `"knife"` e `"scissor"` domine o aprendizado
 
 ---
 
@@ -120,38 +120,19 @@ Durante o processo de unificação, foi aplicado um **subsampling** para limitar
 ##### 📂 Train
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 1000           |
-| scissor      | 560            |
-| scalpel      | 588            |
-| axe          | 1000           |
-| saw          | 633            |
-| chainsaw     | 757            |
-| chisel       | 309            |
-| sickle       | 345            |
+| knife        | 1627           |
+| scissor      | 2050           |
+| cutter       | 862            |
+
+Também foram adicionados ao dataset de train, cerca de 100 imagens de botas e grampeadores com o intuito de sujar o dataset.
+
 
 ##### 📂 Valid
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 468            |
-| scissor      | 160            |
-| scalpel      | 166            |
-| axe          | 234            |
-| saw          | 0              |
-| chainsaw     | 217            |
-| chisel       | 29             |
-| sickle       | 0              |
-
-##### 📂 Test
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 127            |
-| scissor      | 80             |
-| scalpel      | 86             |
-| axe          | 250            |
-| saw          | 0              |
-| chainsaw     | 106            |
-| chisel       | 15             |
-| sickle       | 0              |
+| knife        | 162            |
+| scissor      | 199            |
+| cutter       | 177            |
 
 
 
@@ -161,7 +142,7 @@ Aplicamos técnicas avançadas de **data augmentation** para resolver o desequil
 
 ## 🎯 Objetivo
 
-Aumentar o número de imagens para classes minoritárias como `sickle`, `chisel`, `scalpel` e `chainsaw`, garantindo que cada classe tivesse pelo menos **1000 imagens no conjunto de treino**, para manter o equilíbrio.
+Aumentar o número de imagens para classes minoritárias como `cutter`, garantindo que cada classe tivesse pelo menos **1000 imagens no conjunto de treino**, para manter o equilíbrio.
 
 ---
 
@@ -211,38 +192,24 @@ Após a aplicação da superaugmentação e controle de limites, o dataset ficou
 ### 📂 Train
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 1000           |
-| scissor      | 1560           |
-| scalpel      | 1588           |
-| axe          | 1000           |
-| saw          | 1633           |
-| chainsaw     | 1757           |
-| chisel       | 1218           |
-| sickle       | 1345           |
+| knife        | 0000           |
+| scissor      | 0000           |
+| cutter       | 0000           |
+
 
 ### 📂 Valid
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 468            |
-| scissor      | 160            |
-| scalpel      | 166            |
-| axe          | 234            |
-| saw          | 0              |
-| chainsaw     | 217            |
-| chisel       | 29             |
-| sickle       | 0              |
+| knife        | 0000           |
+| scissor      | 0000           |
+| cutter       | 0000           |
 
 ### 📂 Test
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 127            |
-| scissor      | 80             |
-| scalpel      | 86             |
-| axe          | 250            |
-| saw          | 0              |
-| chainsaw     | 106            |
-| chisel       | 15             |
-| sickle       | 0              |
+| knife        | 0000           |
+| scissor      | 0000           |
+| cutter       | 0000           |
 
 ---
 
@@ -258,7 +225,7 @@ Após a aplicação de superaugmentações para balancear o conjunto de treino (
 - Aplicar uma divisão próxima a:
   - **8%** do total para `valid`
   - **4%** do total para `test`
-- **Evitar desbalanceamento extremo**, especialmente em classes minoritárias como `saw`, `chisel` e `sickle`
+- **Evitar desbalanceamento extremo**, especialmente em classes minoritárias como `cutter`
 
 ---
 
@@ -266,11 +233,11 @@ Após a aplicação de superaugmentações para balancear o conjunto de treino (
 
 Antes do rebalanceamento, as seguintes classes estavam **zeradas ou sub-representadas**:
 
-| Classe   | Train | Valid | Test |
-|----------|-------|-------|------|
-| saw      | 1633  | 0     | 0    |
-| chisel   | 1218  | 29    | 15   |
-| sickle   | 1345  | 0     | 0    |
+| Classe   | Train | Valid |
+|----------|-------|-------|
+| knife    | 0000  | 0     |
+| scissor  | 0000  | 0     |
+| cutter   | 0000  | 0     |
 
 ---
 
@@ -291,9 +258,9 @@ Utilizamos um script para:
 
 | Classe   | Movidos para `valid` | Movidos para `test` |
 |----------|----------------------|----------------------|
-| saw      | 130                  | 65                   |
-| chisel   | 97                   | 48                   |
-| sickle   | 108                  | 54                   |
+| knife    | 0                    | 0                   |
+| scissor  | 0                    | 0                   |
+| cutter   | 0                    | 0                   |
 
 ---
 
@@ -310,38 +277,16 @@ Após o rebalanceamento, as três classes agora também estão presentes nos con
 #### 📂 Train
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 1000           |
-| scissor      | 1560           |
-| scalpel      | 1588           |
-| axe          | 1000           |
-| saw          | 1438           |
-| chainsaw     | 1757           |
-| chisel       | 1073           |
-| sickle       | 1183           |
+| knife        | 0000           |
+| scissor      | 0000           |
+| cutter       | 0000           |
 
 #### 📂 Valid
 | Categoria    | Imagens únicas |
 |--------------|----------------|
-| knife        | 468            |
-| scissor      | 160            |
-| scalpel      | 166            |
-| axe          | 234            |
-| saw          | 130            |
-| chainsaw     | 217            |
-| chisel       | 126            |
-| sickle       | 108            |
-
-#### 📂 Test
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 127            |
-| scissor      | 80             |
-| scalpel      | 86             |
-| axe          | 250            |
-| saw          | 65             |
-| chainsaw     | 106            |
-| chisel       | 63             |
-| sickle       | 54             |
+| knife        | 0000           |
+| scissor      | 0000           |
+| cutter       | 0000           |
 
 
 ## 🏋️‍♂️ Treinamento

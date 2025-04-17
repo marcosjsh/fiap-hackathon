@@ -3,9 +3,9 @@ from glob import glob
 from collections import defaultdict
 
 # 📁 Caminho base onde estão os diretórios train/valid/test
-dataset_base = "/content/drive"
+dataset_base = "../../content/drive"
 
-class_names = ['knife', 'scissor', 'scalpel', 'axe', 'saw', 'chainsaw', 'chisel', 'sickle']
+class_names = ['knife', 'scissor', 'cutter']
 
 # 🔁 Inicializa contadores por split
 image_counts_by_split = {

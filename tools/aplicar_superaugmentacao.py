@@ -13,8 +13,8 @@ N_AUGS = 3
 contador_imgs = defaultdict(int)
 
 # Caminhos
-IMGS_DIR = Path("/content/drive")
-LABELS_DIR = Path("/content/drive")
+IMGS_DIR = Path("../../content/drive")
+LABELS_DIR = Path("../../content/drive")
 
 # Augmentações definidas
 transform = Compose([

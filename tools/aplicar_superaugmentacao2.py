@@ -8,8 +8,8 @@ from albumentations import (
 N_AUGS = 3
 
 # Caminhos
-IMGS_DIR = Path("C:\\Users\\aandrade\\Downloads\\dataset\\train\\images")
-LABELS_DIR = Path("C:\\Users\\aandrade\\Downloads\\dataset\\train\\labels")
+IMGS_DIR = Path("../../content/drive/train/images")
+LABELS_DIR = Path("../../content/drive/train/labels")
 AUG_IMG_DIR = Path(IMGS_DIR) / "augmented"
 AUG_LABEL_DIR = Path(LABELS_DIR) / "augmented"
 AUG_IMG_DIR.mkdir(parents=True, exist_ok=True)

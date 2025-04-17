@@ -5,18 +5,13 @@ import random
 # 🔁 Mapeamento da classe -> índice no dataset unificado e limite por categoria
 class_map = {
     "knife": {"index": 0, "limite": 1000},
-    "scissor": {"index": 1, "limite": None},
-    "scalpel": {"index": 2, "limite": None},
-    "axe": {"index": 3, "limite": 1000},
-    "saw": {"index": 4, "limite": None},
-    "chainsaw": {"index": 5, "limite": None},
-    "chisel": {"index": 6, "limite": None},
-    "sickle": {"index": 7, "limite": None}
+    "scissor": {"index": 1, "limite": 1000},
+    "cutter": {"index": 2, "limite": 1000}
 }
 labels_com_defeito = []
 
-base_src = "/content/drive"
-base_dst = "/content/drive"
+base_src = "../../content/drive"
+base_dst = "../../content/drive"
 
 # Criar estrutura de diretórios
 splits = ["train", "valid", "test"]

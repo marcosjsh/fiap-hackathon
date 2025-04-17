@@ -1,12 +1,16 @@
 # 📌 Importar
 from ultralytics import YOLO
+import os
 
-# 📌 Carregar modelo YOLOv8s
-model = YOLO('yolov8s.yaml')  # ou 'yolov8s.pt' para transfer learning
+# 📌 Definir caminho absoluto do dataset
+dataset_path = os.path.abspath('dataset/data.yaml')
+
+# 📌 Carregar modelo YOLOv5s
+model = YOLO('yolov5s.yaml')  # ou 'yolov8s.pt' para transfer learning
 
 # 📌 Treinar o modelo
 model.train(
-    data='C:\\Users\\aandrade\\Downloads\\dataset\\data.yaml',  # Caminho para o arquivo YAML
+    data=dataset_path,  # Caminho absoluto para o arquivo YAML
     epochs=100,
     imgsz=640,
     batch=32,

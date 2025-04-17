@@ -32,8 +32,8 @@ def verificar_correspondencia_labels(pasta_imagens, pasta_labels):
 
 
 # 🔧 Substitua pelos caminhos corretos
-pasta_imagens = "/content/drive"
-pasta_labels = "/content/drive"
+pasta_imagens = "../../content/drive"
+pasta_labels = "../../content/drive"
 
 # Rodar a verificação
 imgs_sem_lbl, lbls_sem_img = verificar_correspondencia_labels(pasta_imagens, pasta_labels)
