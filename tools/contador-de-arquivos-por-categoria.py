@@ -5,7 +5,7 @@ from collections import defaultdict
 # 📁 Caminho base onde estão os diretórios das classes
 dataset_base = r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\content\drive\dataset"
 
-class_names = ['knife', 'scissor', 'cutter', 'boot', 'stapler']
+class_names = ['knife', 'scissor', 'cutter']
 splits = ['train', 'valid', 'test']
 
 # 🔁 Inicializa contadores

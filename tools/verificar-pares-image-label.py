@@ -32,8 +32,8 @@ def verificar_correspondencia_labels(pasta_imagens, pasta_labels):
 
 
 # 🔧 Substitua pelos caminhos corretos
-pasta_imagens = "../../content/drive"
-pasta_labels = "../../content/drive"
+pasta_imagens = r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\dataset\train\images"
+pasta_labels = r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\dataset\train\labels"
 
 # Rodar a verificação
 imgs_sem_lbl, lbls_sem_img = verificar_correspondencia_labels(pasta_imagens, pasta_labels)

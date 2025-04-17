@@ -9,7 +9,7 @@
 - Sonival dos Santos (RM356905) - sonival.santos@gmail.com  
 
 Vídeo (YouTube):  
-GitHub: https://github.com/apandrade/tech-challenge5  
+GitHub: https://github.com/marcosjsh/fiap-hackathon.git
 
 ---
 
@@ -25,7 +25,7 @@ Antes de definir o modelo ideal para a detecção de objetos cortantes, avaliamo
 
 - **YOLOv8**: Arquitetura mais recente da linha YOLO, com suporte modular e técnicas avançadas de augmentação. Embora promissor, apresentou resultados inferiores em nossos experimentos com imagens reais.
 
-- **CLIP + SAM / Florence2**: Modelos multimodais voltados a tarefas de classificação, segmentação e análise semântica. Embora impressionantes em capacidades gerais, não se mostraram eficazes para detecção precisa de múltiplos objetos cortantes em imagens reais.
+- **CLIP + SAM / Florence2**: Modelos multimodais voltados a tarefas de classificação, segmentação e análise semântica. Embora impressionantes em capacidades gerais, não se mostraram eficazes para detecção precisa de múltiplos objetos cortantes em imagens reais. Apesar de suas capacidades multimodais, modelos como CLIP e SAM não são projetados nativamente para tarefas de detecção com bounding boxes, sendo mais adequados para classificação sem supervisão ou segmentação interativa
 
 ## ⚖️ Comparativo entre modelos
 
@@ -91,34 +91,27 @@ Realizou-se uma **pesquisa ativa por conjuntos de dados públicos no Roboflow**,
 Cada classe foi buscada individualmente, selecionando projetos com imagens reais, bounding boxes precisos e variações visuais significativas. Os datasets foram então baixados e organizados em pastas separadas por classe.
 A contagem original de arquivos é a seguinte:
 
-##### 📂 Train
+#### 📂 Train
 | Categoria    | Imagens |
 |--------------|---------|
-| knife        | 1677    |
-| scissor      | 2100    |
+| knife        | 1627    |
+| scissor      | 2050    |
 | cutter       | 862     |
-| boot         | 50      |
-| stapler      | 50      |
 
-##### 📂 Valid
+#### 📂 Valid
 | Categoria    | Imagens |
 |--------------|---------|
 | knife        | 162     |
 | scissor      | 199     |
 | cutter       | 117     |
-| boot         | 0       |
-| stapler      | 0       |
 
-##### 📂 Test
+#### 📂 Test
 | Categoria    | Imagens |
 |--------------|---------|
 | knife        | 72      |
 | scissor      | 100     |
 | cutter       | 31      |
-| boot         | 17      |
-| stapler      | 0       |
 
-obs: adicionamos algumas imagens de `boot` e `stapler` com o intuito de sujar o dataset
 
 ---
 
@@ -148,11 +141,12 @@ Durante o processo de unificação, foi aplicado um **subsampling** para limitar
 #### Resultado do Subsampling
 
 ##### 📂 Train
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 1627           |
-| scissor      | 2050           |
-| cutter       | 862            |
+| Categoria    | Imagens |
+|--------------|---------|
+| knife        | 1000    |
+| scissor      | 1000    |
+| cutter       | 862     |
+
 
 Também foram adicionados ao dataset de train, cerca de 100 imagens de botas e grampeadores com o intuito de sujar o dataset.
 
@@ -168,156 +162,13 @@ Também foram adicionados ao dataset de train, cerca de 100 imagens de botas e g
 
 # 🧪 Superaugmentação de Dados com Albumentations para YOLOv5
 
-Aplicamos técnicas avançadas de **data augmentation** para resolver o desequilíbrio entre as categorias do nosso dataset de detecção de objetos cortantes.
+A superaugmentação de datasets é fundamental para melhorar a performance de modelos como o YOLOv5, especialmente em cenários com poucos dados. Ela amplia artificialmente o conjunto de imagens por meio de transformações como rotações, mudanças de brilho, cortes, ruídos e variações geométricas. Isso ajuda o modelo a aprender a detectar objetos sob diferentes condições, evitando o overfitting e melhorando sua capacidade de generalização para situações do mundo real.
 
-## 🎯 Objetivo
+Além disso, a superaugmentação torna o detector mais robusto, simulando variações que os objetos podem apresentar em contextos reais, como diferentes fundos, iluminações, ângulos e oclusões. Assim, o modelo se torna mais confiável em aplicações práticas, como segurança, onde objetos como facas e tesouras podem aparecer de formas imprevisíveis.
 
-Aumentar o número de imagens para classes minoritárias como `cutter`, garantindo que cada classe tivesse pelo menos **1000 imagens no conjunto de treino**, para manter o equilíbrio.
-
----
-
-## 🧰 Técnicas utilizadas
-
-Aumentações aplicadas usando [Albumentations](https://albumentations.ai/), uma das bibliotecas mais rápidas e flexíveis para visão computacional.
-
-### 🔄 Transformaçōes aplicadas:
-
-- `HorizontalFlip`: espelhamento horizontal aleatório
-- `RandomBrightnessContrast`: variação aleatória de brilho e contraste
-- `MotionBlur`: simula borrões de movimento
-- `Affine`: rotação, escala e deslocamento espacial
-- `CoarseDropout`: técnica inspirada no Cutout, simula obstruções parciais
-
-### ⚙️ Parâmetros de segurança
-
-- `clip=True`: impede que bboxes ultrapassem os limites da imagem
-- `filter_invalid_bboxes=True`: remove bboxes com área inválida ou posição negativa
-- `min_visibility=0.1`: ignora bboxes com menos de 10% visibilidade após augmentação
+Obs: O nosso dataset já conta com superaugmentação.
 
 ---
-
-## 🧠 Problemas que resolvemos
-
-| Problema                                   | Solução aplicada                                  |
-|--------------------------------------------|--------------------------------------------------|
-| Desequilíbrio entre classes                | Augmentações direcionadas para classes minoritárias |
-| Bounding boxes inválidas ou corrompidas    | Clipping, filtro por visibilidade e checagem de validade |
-| Dataset dominado por `knife` e `axe`       | Limitamos manualmente para 1000 imagens por classe |
-
----
-
-## 🔢 Controle de quantidade por classe
-
-Durante o processo de augmentação, adicionamos lógica para:
-- Contabilizar imagens por classe
-- Interromper a geração quando a classe atingir 1000 imagens
-- Permitir múltiplas classes por imagem, desde que ao menos uma esteja abaixo do limite
-
----
-
-## ✅ Resultado da Superaugmentação
-
-Após a aplicação da superaugmentação e controle de limites, o dataset ficou assim:
-
-### 📂 Train
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 0000           |
-| scissor      | 0000           |
-| cutter       | 0000           |
-
-
-### 📂 Valid
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 0000           |
-| scissor      | 0000           |
-| cutter       | 0000           |
-
-### 📂 Test
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 0000           |
-| scissor      | 0000           |
-| cutter       | 0000           |
-
----
-
-# ⚖️ Rebalanceamento dos Conjuntos `valid` e `test` do Dataset
-
-Após a aplicação de superaugmentações para balancear o conjunto de treino (`train`), foi necessário **rebalancear os conjuntos de validação (`valid`) e teste (`test`)** para garantir que todas as categorias fossem representadas adequadamente em todas as fases do treinamento.
-
----
-
-## 🎯 Objetivo
-
-- Garantir que **todas as classes relevantes** estejam presentes em `valid` e `test`
-- Aplicar uma divisão próxima a:
-  - **8%** do total para `valid`
-  - **4%** do total para `test`
-- **Evitar desbalanceamento extremo**, especialmente em classes minoritárias como `cutter`
-
----
-
-## 🔍 Diagnóstico inicial
-
-Antes do rebalanceamento, as seguintes classes estavam **zeradas ou sub-representadas**:
-
-| Classe   | Train | Valid |
-|----------|-------|-------|
-| knife    | 0000  | 0     |
-| scissor  | 0000  | 0     |
-| cutter   | 0000  | 0     |
-
----
-
-## 🛠️ Estratégia aplicada
-
-Utilizamos um script para:
-
-1. **Identificar imagens** em `train` que continham as classes 4 (saw), 6 (chisel) e 7 (sickle)
-2. **Selecionar aleatoriamente**:
-   - 8% das imagens → mover para `valid`
-   - 4% das imagens → mover para `test`
-3. **Mover** os arquivos de imagem (`.jpg`) e seus respectivos rótulos (`.txt`)
-4. Criar as pastas necessárias caso ainda não existissem
-
----
-
-## ✅ Quantidades redistribuídas
-
-| Classe   | Movidos para `valid` | Movidos para `test` |
-|----------|----------------------|----------------------|
-| knife    | 0                    | 0                   |
-| scissor  | 0                    | 0                   |
-| cutter   | 0                    | 0                   |
-
----
-
-## 📂 Resultado
-
-Após o rebalanceamento, as três classes agora também estão presentes nos conjuntos `valid` e `test`, tornando a validação mais justa e representativa.
-
-- Esse rebalanceamento não altera o conteúdo de treino, apenas melhora a **avaliação final do modelo**.
-- A abordagem é **segura e eficiente**, pois evita duplicações e mantém o alinhamento entre `images/` e `labels/`.
-- Esse processo pode ser repetido sempre que o conjunto de treino for expandido ou alterado.
-
-### 📸 Quantidade de imagens por categoria e por split
-
-#### 📂 Train
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 0000           |
-| scissor      | 0000           |
-| cutter       | 0000           |
-
-#### 📂 Valid
-| Categoria    | Imagens únicas |
-|--------------|----------------|
-| knife        | 0000           |
-| scissor      | 0000           |
-| cutter       | 0000           |
-
 
 ## 🏋️‍♂️ Treinamento
 
@@ -369,7 +220,11 @@ model.train(
 
 ## 🎯 Objetivo do modelo
 
-Detectar objetos cortantes vs. não cortantes, usando imagens balanceadas, com múltiplas classes (como `knife`, `scissor`, `axe`, `sickle`, `chair`, `bathtub`, etc.) agrupadas em categorias `Sharped` e `Not-Sharped`.
+Detectar objetos cortantes vs. não cortantes, usando imagens balanceadas, com múltiplas classes (como `knife`, `scissor` e `cutter`)
+
+## Resultados do treinamento
+
+![Resultados](assets/treinamento-v5s.png)
 
 
 # Instruções de Uso
@@ -390,8 +245,8 @@ Detectar objetos cortantes vs. não cortantes, usando imagens balanceadas, com m
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/projeto-yolov5-gui.git
-cd projeto-yolov5-gui
+git clone https://github.com/marcosjsh/fiap-hackathon.git
+cd fiap-hackathon
 ```
 
 ### 2. (Recomendado) Crie e ative um ambiente virtual
@@ -420,7 +275,7 @@ pip install -r requirements.txt
 Coloque seu modelo YOLOv5 treinado com nome `best.pt` na raiz do projeto:
 
 ```
-projeto-yolov5-gui/
+fiap-hackathon/
 ├── main.py
 ├── best.pt  ✅
 ├── requirements.txt

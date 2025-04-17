@@ -10,8 +10,8 @@ class_map = {
 }
 labels_com_defeito = []
 
-base_src = "../../content/drive"
-base_dst = "../../content/drive"
+base_src = r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\content\drive\dataset"
+base_dst = r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\dataset"
 
 # Criar estrutura de diretórios
 splits = ["train", "valid", "test"]

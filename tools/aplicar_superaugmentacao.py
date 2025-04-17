@@ -1,38 +1,55 @@
-import os
 import cv2
 from pathlib import Path
-from albumentations import Compose, HorizontalFlip, RandomBrightnessContrast, MotionBlur, Affine, CoarseDropout, BboxParams
-from collections import defaultdict
+from albumentations import (
+    Compose, HorizontalFlip, VerticalFlip, RandomRotate90,
+    CoarseDropout, RandomResizedCrop, Affine, BboxParams
+)
 
-# Classes minoritárias alvo (índices)
-CLASSES_ALVO = [1, 2, 4, 5, 6, 7]
-MAX_IMGS_POR_CATEGORIA = 1000
 N_AUGS = 3
 
-# Contador de imagens por categoria
-contador_imgs = defaultdict(int)
-
 # Caminhos
-IMGS_DIR = Path("../../content/drive")
-LABELS_DIR = Path("../../content/drive")
+IMGS_DIR = Path(r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\content\drive\dataset\cutter\images")
+LABELS_DIR = Path(r"C:\Users\marco\OneDrive\Documents\GitHub\fiap-hackathon\content\drive\dataset\cutter\labels")
+AUG_IMG_DIR = Path(IMGS_DIR) / "augmented"
+AUG_LABEL_DIR = Path(LABELS_DIR) / "augmented"
+AUG_IMG_DIR.mkdir(parents=True, exist_ok=True)
+AUG_LABEL_DIR.mkdir(parents=True, exist_ok=True)
 
-# Augmentações definidas
 transform = Compose([
-    HorizontalFlip(p=0.5),
-    RandomBrightnessContrast(p=0.5),
-    MotionBlur(blur_limit=3, p=0.2),
-    Affine(translate_percent=0.05, scale=1.1, rotate=15, p=0.5),
+    # Espelhamentos aumentam variação posicional
+    HorizontalFlip(p=0.6),            # Aumentei para 60% — comum em dataset real
+    VerticalFlip(p=0.4),              # Aumentei para 40% — objetos podem estar invertidos
+    RandomRotate90(p=0.4),            # Rotações fortes melhoram orientação geral
+
+    # Zoom extremo e cortes agressivos
+    RandomResizedCrop(
+        size=(512, 512),               # Tamanho fixo para manter consistência  
+        scale=(0.2, 0.6),             # Zoom forte — até 20% da imagem original visível
+        ratio=(0.5, 1.5),             # Permite cortes verticais e horizontais variados
+        p=0.6                         # Alta chance, simula objetos muito próximos
+    ),
+
+    # Transformação afim agressiva
+    Affine(
+        translate_percent=0.15,       # Translação até 15% — pega pedaços diferentes
+        scale=(0.9, 1.3),             # Permite reduzir e aumentar escala
+        rotate=(-30, 30),             # Roda até 30° para ambos os lados
+        p=0.6                         # Aumentei para aplicar com frequência
+    ),
+
+    # Simulação de obstruções (ex: mãos, sombras, dedos)
     CoarseDropout(
-        num_holes_range=(1, 4),
-        hole_height_range=(0.05, 0.2),
-        hole_width_range=(0.05, 0.2),
-        fill=0,
-        p=0.3)
+        num_holes_range=(4, 8),                  # Número de buracos (simula múltiplas oclusões)
+        hole_height_range=(0.1, 0.3),            # Altura de cada buraco: entre 10% e 30% da imagem
+        hole_width_range=(0.1, 0.3),             # Largura de cada buraco: entre 10% e 30%
+        fill='random',                           # Preenchimento de cor aleatória para simular oclusões por tecidos e outros objetos
+        p=0.6                                    # Aplica em 60% das imagens
+    )
 ],
 bbox_params=BboxParams(
     format='yolo',
     label_fields=['class_labels'],
-    min_visibility=0.1,
+    min_visibility=0.15,              # Exige pelo menos 15% do bbox visível
     clip=True,
     filter_invalid_bboxes=True
 ))
@@ -73,13 +90,6 @@ for img_file in IMGS_DIR.glob("*.jpg"):
 
     bboxes, class_ids = carrega_labels(label_file)
 
-    # Só considera se houver classe de interesse
-    if not any(cls in CLASSES_ALVO for cls in class_ids):
-        continue
-
-    # Pula se todas as classes da imagem já bateram o limite
-    if all(contador_imgs[cls] >= MAX_IMGS_POR_CATEGORIA for cls in class_ids if cls in CLASSES_ALVO):
-        continue
 
     image = cv2.imread(str(img_file))
     h, w = image.shape[:2]
@@ -93,19 +103,11 @@ for img_file in IMGS_DIR.glob("*.jpg"):
         if len(aug_bboxes) == 0:
             continue
 
-        # Verifica se pode salvar (pelo menos uma classe da imagem está abaixo do limite)
-        if all(contador_imgs[cls] >= MAX_IMGS_POR_CATEGORIA for cls in aug_classes if cls in CLASSES_ALVO):
-            continue
-
         new_img_name = img_file.stem + f"_aug{i}.jpg"
         new_lbl_name = label_file.stem + f"_aug{i}.txt"
 
-        cv2.imwrite(str(IMGS_DIR / new_img_name), aug_img)
-        salvar_labels(aug_bboxes, aug_classes, LABELS_DIR / new_lbl_name)
+        cv2.imwrite(str(AUG_IMG_DIR / new_img_name), aug_img)
+        salvar_labels(aug_bboxes, aug_classes, AUG_LABEL_DIR / new_lbl_name)
 
-        # Atualiza contadores apenas das classes realmente salvas
-        for cls in set(aug_classes):
-            if cls in CLASSES_ALVO:
-                contador_imgs[cls] += 1
 
 print("✅ Superaugmentações concluídas com sucesso.")
