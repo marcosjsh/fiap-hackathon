@@ -1,4 +1,4 @@
-# POS FIAP ALURA - IA PARA DEVS - Hackathon
+# POS FIAP ALURA - IA PARA DEVS - HACKATHON
 
 ## Integrantes Grupo 26
 
