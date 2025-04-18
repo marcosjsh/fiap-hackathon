@@ -249,6 +249,13 @@ Detectar objetos cortantes vs. não cortantes, usando imagens balanceadas, com m
 
 ![Resultados](assets/treinamento-v5s.png)
 
+Avaliando o nosso treinamento, podemos ver que:
+O modelo YOLOv5s foi treinado por 100 épocas e teve um desempenho muito bom, especialmente considerando que se trata de uma versão leve da arquitetura. A validação mostrou uma média de precisão (mAP@0.5) de 86%, com destaque para a classe tesouras, que alcançou incríveis 95% de mAP. Isso mostra que o modelo aprendeu muito bem a identificar esse tipo de objeto.
+
+A classe estilete também teve uma performance consistente, com 90% de mAP e boa revocação. Já a classe faca ficou um pouco abaixo, com 72% de mAP e uma revocação mais baixa. Isso pode indicar que o modelo ainda tem dificuldades para reconhecer facas em certos contextos.
+
+No geral, os resultados são positivos. A inferência está muito rápida, com apenas 1.5ms por imagem, o que torna o modelo ideal para aplicações em tempo real. Com pequenos ajustes no dataset ou nos dados da classe knife, o desempenho pode melhorar ainda mais.
+
 
 # Instruções de Uso
 
