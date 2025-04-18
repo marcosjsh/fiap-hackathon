@@ -8,7 +8,7 @@
 - Michael dos Santos Silva (RM357009) - michael.shel96@gmail.com  
 - Sonival dos Santos (RM356905) - sonival.santos@gmail.com  
 
-Vídeo (YouTube):  
+Vídeo (YouTube): https://youtu.be/jWyHVtRH0hs
 GitHub: https://github.com/marcosjsh/fiap-hackathon.git
 
 ---
