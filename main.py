@@ -22,9 +22,9 @@ modelo.iou = 0.5   # IOU para NMS
 # modelo.max_det = 5   # Número máximo de detecções por imagem (descomentar para testar com vídeos muito longos)
 
 # Configuração do e-mail
-email_user = "marcosjsh@gmail.com"  # Endereço do remetente
+email_user = "seu_email@gmail.com"  # Endereço do remetente
 # Para criar seu código de app(caso use o gmail), crie em https://myaccount.google.com/apppassword
-email_cod = "tolxzddwglkvurkr"   # Código do app do Gmail
+email_cod = "sua_senha_do_app"   # Código do app do Gmail
 
 # Variáveis globais
 opcao = ""

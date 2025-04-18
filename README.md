@@ -13,6 +13,28 @@ GitHub: https://github.com/marcosjsh/fiap-hackathon.git
 
 ---
 
+# Situação Problema
+
+## Detecção de materiais cortantes
+
+A FIAP VisionGuard, empresa de monitoramento de câmeras de segurança, está analisando a viabilidade de uma nova funcionalidade para otimizar o seu software.
+O objetivo da empresa é usar de novas tecnologias para identificar situações atípicas e que possam colocar em risco a segurança de estabelecimentos e comércios que utilizam suas câmeras.
+Um dos principais desafios da empresa é utilizar Inteligência Artificial para identificar objetos cortantes (facas, tesouras e similares) e emitir alertas para a central de segurança.
+A empresa tem o objetivo de validar a viabilidade dessa feature, e para isso, será necessário fazer um MVP para detecção supervisionada desses objetos.
+
+### Objetivos
+- Construir ou buscar um dataset contendo imagens de facas, tesouras e outros objetos cortantes em diferentes condições de ângulo e iluminação;
+- Anotar o dataset para treinar o modelo supervisionado, incluindo imagens negativas (sem objetos perigosos) para reduzir falsos positivos;
+- Treinar o modelo;
+- Desenvolver um sistema de alertas (pode ser um e-mail).
+
+### Entregas
+- Documentação detalhando o fluxo utilizado para o desenvolvimento da solução;
+- Vídeo de até 15 minutos explicando a solução proposta;
+- Link do github do projeto.
+
+---
+
 # 🧠 Por que escolhemos o YOLOv5 para detecção de objetos cortantes?
 
 ## 📌 Modelos considerados
@@ -69,9 +91,9 @@ Para garantir um bom desempenho do modelo YOLOv5 mesmo em ambientes com recursos
 
 ---
 
-## 🔍 Por que usar o Roboflow?
+## 🔍 Por que usar o Roboflow Universe?
 
-A ferramenta [Roboflow](https://roboflow.com/) foi escolhida por vários motivos:
+A ferramenta [Roboflow Universe](https://universe.roboflow.com/) foi escolhida por vários motivos:
 
 - ✅ Disponibilidade de **diversos datasets rotulados** de forma pública e gratuita
 - ✅ Interface prática para **pré-visualização**, **filtragem por classe** e **download no formato YOLOv8**
@@ -82,7 +104,7 @@ A ferramenta [Roboflow](https://roboflow.com/) foi escolhida por vários motivos
 
 ### 📥 1. Coleta dos Datasets
 
-Realizou-se uma **pesquisa ativa por conjuntos de dados públicos no Roboflow**, com foco nas seguintes classes:
+Realizou-se uma **pesquisa ativa por conjuntos de dados públicos no Roboflow Universe**, com foco nas seguintes classes:
 
 ```python
 ["knife", "scissor", "cutter"]
@@ -166,7 +188,7 @@ A superaugmentação de datasets é fundamental para melhorar a performance de m
 
 Além disso, a superaugmentação torna o detector mais robusto, simulando variações que os objetos podem apresentar em contextos reais, como diferentes fundos, iluminações, ângulos e oclusões. Assim, o modelo se torna mais confiável em aplicações práticas, como segurança, onde objetos como facas e tesouras podem aparecer de formas imprevisíveis.
 
-Obs: O nosso dataset já conta com superaugmentação.
+Obs: O nosso dataset enviado neste repositório já conta com superaugmentação.
 
 ---
 
@@ -341,7 +363,7 @@ requirements.txt     # Dependências
 
 ## 📸 Prévia da Interface
 
-![Tela do sistema](assets/interface.jpg)
+![Tela do sistema](assets/interface.png)
 
 ---
 
