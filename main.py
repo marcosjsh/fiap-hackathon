@@ -12,17 +12,19 @@ from tkinter import ttk
 import shutil
 
 # --- CONFIGURAÇÕES INICIAIS ---
+# Por questões de limitações do gmail, sugerimos limitar o número de frames a 20 para evitar problemas com o servidor
+max_frames = 20 
 
 # Carrega o modelo YOLOv5
 modelo = torch.hub.load('ultralytics/yolov5', 'custom', path='./best.pt')
 modelo.conf = 0.5  # Confiabilidade mínima
 modelo.iou = 0.5   # IOU para NMS
-# modelo.max_det = 10   # Número máximo de detecções por imagem
+# modelo.max_det = 5   # Número máximo de detecções por imagem (descomentar para testar com vídeos muito longos)
 
 # Configuração do e-mail
-email_user = "j1C6o@example.com"  # Endereço do remetente
+email_user = "marcosjsh@gmail.com"  # Endereço do remetente
 # Para criar seu código de app, crie em https://myaccount.google.com/apppassword
-email_cod = ""   # Código do app do Gmail
+email_cod = "tolxzddwglkvurkr"   # Código do app do Gmail
 
 # Variáveis globais
 opcao = ""
@@ -79,7 +81,7 @@ def detectar_video(path_video, output_folder='frames_detectados'):
 
     while True:
         ret, frame = cap.read()
-        if not ret:
+        if not ret or frame_count > max_frames:
             break
         img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = modelo(img_rgb)
@@ -155,10 +157,10 @@ def thread_verificacao():
 
 root = tk.Tk()
 root.title("IA para DEVs - FIAP/ALURA")
-root.configure(bg="#f4f4f4")
+root.configure(bg="#ffffff")
 
 largura_janela = 500
-altura_janela = 300
+altura_janela = 400
 
 def center(root):
     root.update_idletasks()
@@ -168,42 +170,49 @@ def center(root):
 
 center(root)
 
-label_font = ("Segoe UI", 10)
-entry_font = ("Segoe UI", 10)
-button_font = ("Segoe UI", 10, "bold")
-
-main_frame = tk.Frame(root, bg="#f4f4f4", padx=20, pady=20)
+# Frame principal com borda para debug visual
+main_frame = tk.Frame(root, bg="#ffffff", padx=20, pady=20, relief="solid", bd=1)
 main_frame.pack(expand=True, fill="both")
 
-header_frame = tk.Frame(main_frame, bg="#f4f4f4")
-header_frame.pack(fill="x", pady=(0, 20))
+# Frame do cabeçalho com borda para debug visual
+header_frame = tk.Frame(main_frame, bg="#ffffff", relief="solid", bd=1)
+header_frame.pack(fill="x", pady=10)
 
-# Cabeçalho
+# Título e descrição
 title_label = tk.Label(header_frame, text="Sistema de Detecção de Objetos Cortantes",
-                       font=("Segoe UI", 14, "bold"), bg="#f4f4f4", fg="#2c3e50")
-title_label.pack(anchor="center")
+                    font=("Arial", 14, "bold"), bg="#ffffff", fg="#000000")
+title_label.pack(pady=5)
 
 desc_label = tk.Label(header_frame, text="Selecione um arquivo e insira o e-mail para notificação.",
-                      font=("Segoe UI", 10), bg="#f4f4f4", fg="#555")
-desc_label.pack(anchor="center", pady=(5, 0))
+                    font=("Arial", 10), bg="#ffffff", fg="#000000")
+desc_label.pack(pady=5)
 
-# Campos de entrada
+# Frame do email com borda para debug visual
+email_frame = tk.Frame(main_frame, bg="#ffffff", relief="solid", bd=1)
+email_frame.pack(fill="x", pady=10)
 
-tk.Label(main_frame, text="E-mail de destino:", font=label_font, bg="#f4f4f4").pack(anchor="w")
-email_entry = tk.Entry(main_frame, font=entry_font, width=40, relief="solid", bd=1)
-email_entry.pack(pady=(0, 10))
+# Componentes do email
+email_label = tk.Label(email_frame, text="E-mail de destino:", font=("Arial", 10), bg="#ffffff", fg="#000000")
+email_label.pack(side="left", padx=5)
 
-select_button = tk.Button(main_frame, text="Selecionar Arquivo", font=button_font,
-                          bg="#3498db", fg="white", padx=10, pady=5, relief="flat", command=selec_arquivo)
-select_button.pack(fill="x", pady=(0, 10))
+email_entry = tk.Entry(email_frame, font=("Arial", 10), width=40)
+email_entry.pack(side="left", padx=5, pady=5)
 
-start_button = tk.Button(main_frame, text="Iniciar Detecção", font=button_font,
-                         bg="#27ae60", fg="white", padx=10, pady=5, relief="flat", command=thread_verificacao)
-start_button.pack(fill="x", pady=(10, 0))
+# Botões
+select_button = tk.Button(main_frame, text="Selecionar Arquivo", font=("Arial", 10, "bold"),
+                        bg="#3498db", fg="black", padx=10, pady=5, command=selec_arquivo)
+select_button.pack(fill="x", pady=5)
 
+start_button = tk.Button(main_frame, text="Iniciar Detecção", font=("Arial", 10, "bold"),
+                        bg="#27ae60", fg="black", padx=10, pady=5, command=thread_verificacao)
+start_button.pack(fill="x", pady=5)
+
+# Barra de progresso
 progress_bar = ttk.Progressbar(main_frame, length=200, mode="indeterminate")
+progress_bar.pack(fill="x", pady=5)
 
-loading_label = tk.Label(main_frame, text="", font=("Segoe UI", 10), bg="#f4f4f4", fg="#27ae60")
-loading_label.pack(pady=(0, 20))
+# Label de carregamento
+loading_label = tk.Label(main_frame, text="Aguardando...", font=("Arial", 10), bg="#ffffff", fg="#000000")
+loading_label.pack(pady=5)
 
 root.mainloop()
