@@ -6,7 +6,7 @@ import os
 dataset_path = os.path.abspath('dataset/data.yaml')
 
 # 📌 Carregar modelo YOLOv5s
-model = YOLO('yolov5s.yaml')  # ou 'yolov8s.pt' para transfer learning
+model = YOLO('yolov5s.yaml') 
 
 def main():
     # 📌 Treinar o modelo

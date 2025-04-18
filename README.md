@@ -1,4 +1,4 @@
-# POS FIAP ALURA - IA PARA DEVS - Tech Challenge Fase 5
+# POS FIAP ALURA - IA PARA DEVS - Hackathon
 
 ## Integrantes Grupo 26
 
@@ -231,7 +231,7 @@ Detectar objetos cortantes vs. não cortantes, usando imagens balanceadas, com m
 
 ## 🧰 Tecnologias Utilizadas
 
-- [Python 3.8+](https://www.python.org/)
+- [Python 3.8+](https://www.python.org/) (Recomendamos Python 3.12 caso o OS seja MacOS, devido a um bug de exibição da interface produzida com Tkinter)
 - [YOLOv5 (Ultralytics)](https://github.com/ultralytics/yolov5)
 - OpenCV
 - Tkinter

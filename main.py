@@ -12,7 +12,7 @@ from tkinter import ttk
 import shutil
 
 # --- CONFIGURAÇÕES INICIAIS ---
-# Por questões de limitações do gmail, sugerimos limitar o número de frames a 20 para evitar problemas com o servidor
+# Por questões de limitações do gmail, sugerimos limitar o número de frames detectad 20 para evitar problemas com o servidor
 max_frames = 20 
 
 # Carrega o modelo YOLOv5
@@ -23,7 +23,7 @@ modelo.iou = 0.5   # IOU para NMS
 
 # Configuração do e-mail
 email_user = "marcosjsh@gmail.com"  # Endereço do remetente
-# Para criar seu código de app, crie em https://myaccount.google.com/apppassword
+# Para criar seu código de app(caso use o gmail), crie em https://myaccount.google.com/apppassword
 email_cod = "tolxzddwglkvurkr"   # Código do app do Gmail
 
 # Variáveis globais
@@ -81,7 +81,7 @@ def detectar_video(path_video, output_folder='frames_detectados'):
 
     while True:
         ret, frame = cap.read()
-        if not ret or frame_count > max_frames:
+        if not ret or frame_count >= max_frames:
             break
         img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = modelo(img_rgb)
